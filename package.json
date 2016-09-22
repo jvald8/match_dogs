@@ -1,0 +1,44 @@
+{
+  "name": "match_dogs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-preset-es2015": "^6.14.0",
+    "body-parser": "^1.15.2",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "html-webpack-plugin": "^2.22.0",
+    "md5": "^2.2.1",
+    "moment": "^2.15.0",
+    "petfinder-promise": "^1.0.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-router": "^2.8.1",
+    "superagent": "^2.3.0",
+    "webpack": "^2.1.0-beta.25"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "html-webpack-plugin": "^2.22.0",
+    "http-server": "^0.9.0",
+    "webpack-dev-server": "^1.16.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --inline --content-base . --history-api-fallback"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvald8/match_dogs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jvald8/match_dogs/issues"
+  },
+  "homepage": "https://github.com/jvald8/match_dogs#readme"
+}
