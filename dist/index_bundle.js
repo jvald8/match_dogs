@@ -51,21 +51,66 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	var HelloWorld = React.createClass({
-	  displayName: 'HelloWorld',
+	var Name = React.createClass({
+		displayName: "Name",
 
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      null,
-	      'Hello World!'
-	    );
-	  }
+		getInitialState: function getInitialState() {
+			return { data: [] };
+		},
+		/*componentDidMount: function() {
+	 	this.setState({data: this.props.data})
+	 },*/
+		render: function render() {
+			return React.createElement(
+				"h3",
+				null,
+				this.props.data.res
+			);
+		}
 	});
 
-	ReactDOM.render(React.createElement(HelloWorld, null), document.getElementById('app'));
+	var Profile = React.createClass({
+		displayName: "Profile",
+
+		loadCommentsFromServer: function loadCommentsFromServer() {
+			$.ajax({
+				url: this.props.url,
+				dataType: 'json',
+				cache: false,
+				success: (function (data) {
+					this.setState({ data: data });
+				}).bind(this),
+				error: (function (xhr, status, err) {
+					console.error(this.props.url, status, err.toString());
+				}).bind(this)
+			});
+		},
+		getInitialState: function getInitialState() {
+			return { data: [] };
+		},
+		componentDidMount: function componentDidMount() {
+			this.loadCommentsFromServer();
+			setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+		},
+		render: function render() {
+			return React.createElement(
+				"div",
+				{ className: "main-container" },
+				React.createElement(Name, { data: this.state.data }),
+				React.createElement("img", { className: "prof-image", src: "http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg" }),
+				React.createElement(
+					"div",
+					{ className: "check-x-container" },
+					React.createElement("img", { className: "green-check", src: "../assets/green-check.png" }),
+					React.createElement("img", { className: "red-x", src: "../assets/red-x.png" })
+				)
+			);
+		}
+	});
+
+	ReactDOM.render(React.createElement(Profile, { url: "http://localhost:8080/api/getDog/36239820", pollInterval: 2000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);

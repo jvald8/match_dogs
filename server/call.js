@@ -9,8 +9,14 @@ var request = require(`superagent`);
 var moment = require(`moment`);
 var petfinder = require(`petfinder-promise`)(key, secret);
 
-petfinder.pet.get(36239820, {output: 'Full'}).then(function (breeds) {
-	console.log(breeds);
-}).catch(function (err) {
-	console.log(`Error: ${err.message}`);
-})
+module.exports.getDog = function(req, res) {
+	var dogId = req.params.dogId;
+	petfinder.pet.get(dogId, {output: 'Full'}).then(function (dog) {
+		console.log(dog);
+		res.json({res: dog})
+	}).catch(function (err) {
+		console.log(`Error: ${err.message}`);
+	})
+};
+
+//test dog id 36239820
