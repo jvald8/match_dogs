@@ -26,9 +26,13 @@ router.get('/', function(req, res) {
 	res.json({message: 'hooray! welcome to our api!'});
 });
 
+// gets
 router.get('/getDog/:dogId', call.getDog);
+router.get('/getDogIds/:zipCode', call.getDogIds);
+
+//getDogIds
 
 app.use('/api', router);
 
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log(`Magic happens on port ${port}`);

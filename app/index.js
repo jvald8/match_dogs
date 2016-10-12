@@ -5,15 +5,29 @@ var Name = React.createClass({
   	    };
   	},
 	render: function() {
-		console.log(this.props.dog);
+		//console.log(this.props.dog);
 		return (
 			<h3>{this.props.dog.name}</h3>
 		)
 	}
 });
 
+var ProfileImage = React.createClass({
+	getDefaultProps: function() {
+  	    return {
+  	    	dog: {media: {photos: [null, {status:'Loading'}]}} 
+  	    };
+  	},
+	render: function() {
+		console.log(this.props.dog.media.photos[1].pn);
+		return (
+			<img className="prof-image" src={this.props.dog.media.photos[1].pn} />
+		)
+	}
+});
+
 var Profile = React.createClass({
-	loadCommentsFromServer: function() {
+	loadDogFromServer: function() {
 	    $.ajax({
 	      url: this.props.url,
 	      dataType: 'json',
@@ -30,8 +44,8 @@ var Profile = React.createClass({
     	return {data: []};
   	},
   	componentDidMount: function() {
-    	this.loadCommentsFromServer();
-    	setInterval(this.loadCommentsFromServer, this.props.pollInterval);	
+    	this.loadDogFromServer();
+    	setInterval(this.loadDogFromServer, this.props.pollInterval);	
   	},
 	render: function() {
 		return (
@@ -39,7 +53,7 @@ var Profile = React.createClass({
 
 			  	<Name dog={this.state.data.res} />
 
-			  	<img className="prof-image" src="http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg" />
+			  	<ProfileImage dog={this.state.data.res} />
 			  	
 			  	<div className="check-x-container">
 			  		<img className="green-check" src="../assets/green-check.png" />

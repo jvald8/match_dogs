@@ -62,7 +62,7 @@
 			};
 		},
 		render: function render() {
-			console.log(this.props.dog);
+			//console.log(this.props.dog);
 			return React.createElement(
 				'h3',
 				null,
@@ -71,10 +71,24 @@
 		}
 	});
 
+	var ProfileImage = React.createClass({
+		displayName: 'ProfileImage',
+
+		getDefaultProps: function getDefaultProps() {
+			return {
+				dog: { media: { photos: [null, { status: 'Loading' }] } }
+			};
+		},
+		render: function render() {
+			console.log(this.props.dog.media.photos[1].pn);
+			return React.createElement('img', { className: 'prof-image', src: this.props.dog.media.photos[1].pn });
+		}
+	});
+
 	var Profile = React.createClass({
 		displayName: 'Profile',
 
-		loadCommentsFromServer: function loadCommentsFromServer() {
+		loadDogFromServer: function loadDogFromServer() {
 			$.ajax({
 				url: this.props.url,
 				dataType: 'json',
@@ -91,15 +105,15 @@
 			return { data: [] };
 		},
 		componentDidMount: function componentDidMount() {
-			this.loadCommentsFromServer();
-			setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+			this.loadDogFromServer();
+			setInterval(this.loadDogFromServer, this.props.pollInterval);
 		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'main-container' },
 				React.createElement(Name, { dog: this.state.data.res }),
-				React.createElement('img', { className: 'prof-image', src: 'http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg' }),
+				React.createElement(ProfileImage, { dog: this.state.data.res }),
 				React.createElement(
 					'div',
 					{ className: 'check-x-container' },
