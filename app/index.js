@@ -1,13 +1,13 @@
 var Name = React.createClass({
-	getInitialState: function() {
-    	return {data: []};
+	getDefaultProps: function() {
+  	    return {
+  	    	dog: {name: ''} 
+  	    };
   	},
-  	/*componentDidMount: function() {
-  		this.setState({data: this.props.data})
-  	},*/
 	render: function() {
+		console.log(this.props.dog);
 		return (
-			<h3>{this.props.data.res}</h3>
+			<h3>{this.props.dog.name}</h3>
 		)
 	}
 });
@@ -37,7 +37,7 @@ var Profile = React.createClass({
 		return (
 			<div className="main-container">
 
-			  	<Name data={this.state.data} />
+			  	<Name dog={this.state.data.res} />
 
 			  	<img className="prof-image" src="http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg" />
 			  	
@@ -50,5 +50,7 @@ var Profile = React.createClass({
 		)
  	}
 });
+
+
 
 ReactDOM.render(<Profile url="http://localhost:8080/api/getDog/36239820" pollInterval={2000} />, document.getElementById('app'));

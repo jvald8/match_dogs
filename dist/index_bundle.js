@@ -51,28 +51,28 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
 	var Name = React.createClass({
-		displayName: "Name",
+		displayName: 'Name',
 
-		getInitialState: function getInitialState() {
-			return { data: [] };
+		getDefaultProps: function getDefaultProps() {
+			return {
+				dog: { name: '' }
+			};
 		},
-		/*componentDidMount: function() {
-	 	this.setState({data: this.props.data})
-	 },*/
 		render: function render() {
+			console.log(this.props.dog);
 			return React.createElement(
-				"h3",
+				'h3',
 				null,
-				this.props.data.res
+				this.props.dog.name
 			);
 		}
 	});
 
 	var Profile = React.createClass({
-		displayName: "Profile",
+		displayName: 'Profile',
 
 		loadCommentsFromServer: function loadCommentsFromServer() {
 			$.ajax({
@@ -96,21 +96,21 @@
 		},
 		render: function render() {
 			return React.createElement(
-				"div",
-				{ className: "main-container" },
-				React.createElement(Name, { data: this.state.data }),
-				React.createElement("img", { className: "prof-image", src: "http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg" }),
+				'div',
+				{ className: 'main-container' },
+				React.createElement(Name, { dog: this.state.data.res }),
+				React.createElement('img', { className: 'prof-image', src: 'http://photos.petfinder.com/photos/pets/36239820/1/?bust=1473976016&width=300&-pn.jpg' }),
 				React.createElement(
-					"div",
-					{ className: "check-x-container" },
-					React.createElement("img", { className: "green-check", src: "../assets/green-check.png" }),
-					React.createElement("img", { className: "red-x", src: "../assets/red-x.png" })
+					'div',
+					{ className: 'check-x-container' },
+					React.createElement('img', { className: 'green-check', src: '../assets/green-check.png' }),
+					React.createElement('img', { className: 'red-x', src: '../assets/red-x.png' })
 				)
 			);
 		}
 	});
 
-	ReactDOM.render(React.createElement(Profile, { url: "http://localhost:8080/api/getDog/36239820", pollInterval: 2000 }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDog/36239820', pollInterval: 2000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);
