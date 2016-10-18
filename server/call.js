@@ -13,7 +13,7 @@ var petfinder = require(`petfinder-promise`)(key, secret);
 module.exports.getDog = function(req, res) {
 	var dogId = req.params.dogId;
 	petfinder.pet.get(dogId, {output: 'Full'}).then(function (dog) {
-		console.log(dog);
+		//console.log(dog);
 		res.json({res: dog})
 	}).catch(function (err) {
 		console.log(`Error: ${err.message}`);

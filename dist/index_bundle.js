@@ -62,7 +62,6 @@
 			};
 		},
 		render: function render() {
-			//console.log(this.props.dog);
 			return React.createElement(
 				'h3',
 				null,

@@ -5,7 +5,6 @@ var Name = React.createClass({
   	    };
   	},
 	render: function() {
-		//console.log(this.props.dog);
 		return (
 			<h3>{this.props.dog.name}</h3>
 		)
