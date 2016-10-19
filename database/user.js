@@ -42,3 +42,11 @@ exports.getUser = function(data, db) {
 		})
 	})
 }
+
+exports.addUserEmail = function(data, db) {
+	pool.getConnection(function(err, connection) {
+		// add the email here //data
+		connection.query(`INSERT INTO humans (email) values ${data}`)
+
+	})
+}

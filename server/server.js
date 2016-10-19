@@ -5,6 +5,7 @@ require(`dotenv`).config();
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var _ = require('lodash');
 
@@ -66,21 +67,26 @@ app.get('/login', function(req, res) {
 
 app.get('/success', function(req, res, next) {
   if(_.isEmpty(localStorage.getItem('user').email)) {
-  	res.redirect('/profile')
+  	res.redirect('/finishProfile')
   }
   //res.send('Successfully logged in.<br><a href="/logout">Sign out</a>');
   // if email not present in profile, redirect to profile page, and ask for email.
 
 });
 
-app.get('/profile', function(req, res, next) {
-	//console.log(JSON.parse(localStorage.getItem('user')).email);
-	//res.send({profile:JSON.parse(localStorage.getItem('user')).id})
+app.set('views' ,'./views');
+
+app.set('view engine', 'pug');
+
+app.get('/finishProfile', function(req, res, next) {
 
 	var user = JSON.parse(localStorage.getItem('user')),
+		name = user.name.givenName,
 		photo = user.photos[0].value;
-		
-	res.send(`<form><label>Enter your email</label><br><input type="text"></input><input type="submit"></input></form><img src=${photo}>`)
+
+	//res.send(`<form><label>Enter your email</label><br><input type="text" name="email"></input><br><label>Enter your location</label><br><input type="text" name="location"></input><br><input type="submit"></input></form><img src=${photo}>`)
+
+	res.render('finishProfile', { name: name, photo: photo});
 })
 
 app.get('/error', function(req, res, next) {
@@ -94,7 +100,9 @@ app.get('/logout', function(req, res) {
 // testing login function
 app.get('/test', loggedIn, function(req, res) {
 	res.send('this should only send when logged in')
-})
+});
+
+
 
 var router = express.Router();
 
