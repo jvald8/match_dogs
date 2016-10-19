@@ -8,7 +8,7 @@ html(lang="en")
 		h1= "Welcome to Match Dogs " + name + "!"
 		h2= "Please finish your profile below to start finding your dog!"
 
-		form
+		form(action="/api/finishProfile/", method="POST")
 			label= "Enter your email"
 			br
 			input(type="text",name="email")
@@ -21,12 +21,3 @@ html(lang="en")
 		br
 
 		img(src= photo)
-
-<!--<form>
-	<label>Enter your email</label><br>
-	<input type="text" name="email"></input><br>
-	<label>Enter your location</label><br>
-	<input type="text" name="location"></input><br>
-	<input type="submit"></input>
-</form>
-<img src=${photo}>-->

@@ -29,6 +29,3 @@ module.exports.getDogIds = function(req, res) {
 		console.log(`Error: ${err.message}`)
 	})
 }
-
-//test dog id 36239820
-// test zip code is 93117

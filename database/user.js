@@ -22,7 +22,7 @@ exports.getUser = function(data, db) {
 			if(rows.length === 0) {
 				// create user
 
-				connection.query(`INSERT INTO humans VALUES (null, ${data.id}, null, '${data.name.familyName}', '${data.name.givenName}', '${data.gender}', '${data.profileUrl}', '${data._json.verified}', '${data.photos[0].value}', ${data._json.friends.summary.total_count})`, function(err, rows, fields) {
+				connection.query(`INSERT INTO humans VALUES (null, ${data.id}, null, '${data.name.familyName}', '${data.name.givenName}', '${data.gender}', '${data.profileUrl}', '${data._json.verified}', '${data.photos[0].value}', ${data._json.friends.summary.total_count}, null)`, function(err, rows, fields) {
 					if(err) throw err;
 					//console.log({object: rows});
 					if(rows.length === 0) {
@@ -43,10 +43,22 @@ exports.getUser = function(data, db) {
 	})
 }
 
-exports.addUserEmail = function(data, db) {
+exports.addUserEmailandLocation = function(data, db) {
 	pool.getConnection(function(err, connection) {
 		// add the email here //data
-		connection.query(`INSERT INTO humans (email) values ${data}`)
+
+		console.log({data: data.body})
+
+		var userId = parseInt(data.body.id),
+			email = data.body.email,
+			location = data.body.location;
+
+		connection.query(`Update humans set email = '${email}', location = '${location}' where fb_id=${userId}`,function(err,rows,fields) {
+			if(err) throw err;
+			console.log(rows)
+
+			connection.release();
+		})
 
 	})
 }

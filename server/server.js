@@ -29,7 +29,7 @@ app.use(passport.session());
 
 var call = require('./call');
 
-var db = require('../database/user');
+var userDb = require('../database/user');
 
 var port = process.env.PORT || 8080;
 
@@ -41,7 +41,7 @@ passport.use(new FacebookStrategy({
 }, function(accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
     //Assuming user exists
-    db.getUser(profile, localStorage.setItem('user', JSON.stringify(profile)), done(null, profile));
+    userDb.getUser(profile, localStorage.setItem('user', JSON.stringify(profile)), done(null, profile));
   });
 }));
 
@@ -66,12 +66,10 @@ app.get('/login', function(req, res) {
 })
 
 app.get('/success', function(req, res, next) {
-  if(_.isEmpty(localStorage.getItem('user').email)) {
+  if(localStorage.getItem('user').email === null) {
   	res.redirect('/finishProfile')
   }
-  //res.send('Successfully logged in.<br><a href="/logout">Sign out</a>');
-  // if email not present in profile, redirect to profile page, and ask for email.
-
+  res.send('<p>Youve already added all your data, lets party</p>')
 });
 
 app.set('views' ,'./views');
@@ -81,12 +79,11 @@ app.set('view engine', 'pug');
 app.get('/finishProfile', function(req, res, next) {
 
 	var user = JSON.parse(localStorage.getItem('user')),
+		id = user.id,
 		name = user.name.givenName,
 		photo = user.photos[0].value;
 
-	//res.send(`<form><label>Enter your email</label><br><input type="text" name="email"></input><br><label>Enter your location</label><br><input type="text" name="location"></input><br><input type="submit"></input></form><img src=${photo}>`)
-
-	res.render('finishProfile', { name: name, photo: photo});
+	res.render('finishProfile', { id: id, name: name, photo: photo});
 })
 
 app.get('/error', function(req, res, next) {
@@ -101,8 +98,6 @@ app.get('/logout', function(req, res) {
 app.get('/test', loggedIn, function(req, res) {
 	res.send('this should only send when logged in')
 });
-
-
 
 var router = express.Router();
 
@@ -121,6 +116,9 @@ app.use(function(req, res, next) {
 router.get('/getDog/:dogId', loggedIn, call.getDog);
 router.get('/getDogIds/:zipCode', loggedIn, call.getDogIds);
 
+//puts
+router.post('/finishProfile', loggedIn, addUserIdtoReqBody, userDb.addUserEmailandLocation);
+
 app.use('/api', router);
 
 app.listen(port);
@@ -133,4 +131,9 @@ function loggedIn(req, res, next) {
     } else {
         res.redirect('/login');
     }
+}
+
+function addUserIdtoReqBody(req, res, next) {
+	req.body.id = JSON.parse(localStorage.getItem('user')).id;
+	next();
 }
