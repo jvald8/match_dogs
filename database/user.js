@@ -60,5 +60,7 @@ exports.addUserEmailandLocation = function(data, db) {
 			connection.release();
 		})
 
-	})
+	});
+
+	return db.redirect('/app');
 }

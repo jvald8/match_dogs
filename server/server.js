@@ -67,8 +67,9 @@ app.get('/login', function(req, res) {
 })
 
 app.get('/success', function(req, res, next) {
-  if(localStorage.getItem('user').email === null) {
-  	res.redirect('/finishProfile')
+  console.log({email: localStorage.getItem('user').email});
+  if(localStorage.getItem('user').email === undefined) {
+  	res.redirect('/finishProfile');
   }
   res.send('<p>Youve already added all your data, lets party</p>')
 });
