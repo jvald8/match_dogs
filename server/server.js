@@ -19,11 +19,10 @@ var passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy;
 
 var FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID,
-	FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET
+	FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -42,7 +41,9 @@ passport.use(new FacebookStrategy({
 }, function(accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
     //Assuming user exists
-    userDb.getUser(profile, localStorage.setItem('user', JSON.stringify(profile)), done(null, profile));
+    localStorage.setItem('user', JSON.stringify(profile));
+
+    userDb.getUser(profile, done(null, profile));
   });
 }));
 
@@ -67,11 +68,22 @@ app.get('/login', function(req, res) {
 })
 
 app.get('/success', function(req, res, next) {
-  console.log({email: localStorage.getItem('user').email});
-  if(localStorage.getItem('user').email === undefined) {
-  	res.redirect('/finishProfile');
+  //console.log({email: localStorage.getItem('user').email}); // should be undefined
+  //console.log({req_user: req})
+
+  var profileId = JSON.parse(localStorage.getItem('user')).id;
+
+  console.log(profileId)
+
+  console.log(userDb.profileFinished(profileId, res));
+
+  //console.log({responsefromProfileFinishedFunction: userDb.profileFinished(profileId)})
+
+  /*if(!userDb.profileFinished(profileId)) {
+    res.redirect('/finishProfile');
   }
-  res.send('<p>Youve already added all your data, lets party</p>')
+  res.redirect('/app');*/
+
 });
 
 app.set('views' ,'./views');

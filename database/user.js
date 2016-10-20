@@ -13,41 +13,36 @@ var pool = mysql.createPool({
 });
 
 exports.getUser = function(data, db) {
+	console.log({db: db})
 	pool.getConnection(function(err, connection) {
-		// gets user with id 1 for now
-		//console.log({data: data})
 		connection.query(`SELECT * FROM humans WHERE fb_id=${data.id}`, function(err, rows, fields) {
 			if(err) throw err;
-			console.log({object: rows});
+			console.log({user_exists: rows});
+			// if it doesn't exist, create a new user.
 			if(rows.length === 0) {
-				// create user
 
 				connection.query(`INSERT INTO humans VALUES (null, ${data.id}, null, '${data.name.familyName}', '${data.name.givenName}', '${data.gender}', '${data.profileUrl}', '${data._json.verified}', '${data.photos[0].value}', ${data._json.friends.summary.total_count}, null)`, function(err, rows, fields) {
 					if(err) throw err;
-					//console.log({object: rows});
-					if(rows.length === 0) {
-						// create user
-					} else {
-						return rows;
-					}
+
+					console.log({post_message: `created user: ${data.name.givenName} ${data.name.familyName} in humans table`})
+
+					return rows;
 
 					connection.release();
+					
 				});
 
-			} else {
-				return rows;
 			}
 
+			return rows
+
 			connection.release();
-		})
-	})
+		});
+	});
 }
 
 exports.addUserEmailandLocation = function(data, db) {
 	pool.getConnection(function(err, connection) {
-		// add the email here //data
-
-		console.log({data: data.body})
 
 		var userId = parseInt(data.body.id),
 			email = data.body.email,
@@ -63,4 +58,25 @@ exports.addUserEmailandLocation = function(data, db) {
 	});
 
 	return db.redirect('/app');
+}
+
+exports.profileFinished = function(profileId, res) {
+	pool.getConnection(function(err, connection) {
+
+		connection.query(`SELECT * FROM humans where fb_id=${profileId}`, function(err, rows, fields) {
+			if(err) throw err;
+
+			if(rows[0] !== undefined) {
+				if(!rows[0].email) {
+					res.redirect('/finishProfile');
+				} else {
+					res.redirect('/app')
+				}
+			}
+
+			res.status(200);
+
+			connection.release();
+		})
+	})
 }
