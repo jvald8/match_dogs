@@ -7,6 +7,8 @@ var HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body'
 });
 
+console.log(__dirname)
+
 module.exports = {
     entry: [
         './app/index.js'
@@ -15,8 +17,8 @@ module.exports = {
         loaders: [{test: /\.jsx?$/, include: __dirname + '/app', exclude: /node_modules/, loader: "babel"}]
     },
     output : {
-        filename: "index_bundle.js",
-        path: __dirname + 'public/dist'
+        path: __dirname + '/public/dist/',
+        filename: "index_bundle.js"
     },
     plugins: [HTMLWebpackPluginConfig]
 }

@@ -100,6 +100,19 @@
 				}).bind(this)
 			});
 		},
+		handleCheck: function handleCheck() {
+			$.ajax({
+				url: 'http://localhost:8080/api/yesDog/36532315',
+				dataType: 'json',
+				cache: false,
+				success: function success(data) {
+					console.log({ message: 'successfully posted human-dog relation' });
+				},
+				error: function error(xhr, status, err) {
+					console.error({ message: 'did not successfully posted human-dog relation' });
+				}
+			});
+		},
 		getInitialState: function getInitialState() {
 			return { data: [] };
 		},
@@ -123,7 +136,7 @@
 		}
 	});
 
-	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDog/36239820', pollInterval: 2000 }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDog/36532315', pollInterval: 2000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);

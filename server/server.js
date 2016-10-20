@@ -68,21 +68,10 @@ app.get('/login', function(req, res) {
 })
 
 app.get('/success', function(req, res, next) {
-  //console.log({email: localStorage.getItem('user').email}); // should be undefined
-  //console.log({req_user: req})
 
   var profileId = JSON.parse(localStorage.getItem('user')).id;
 
-  console.log(profileId)
-
-  console.log(userDb.profileFinished(profileId, res));
-
-  //console.log({responsefromProfileFinishedFunction: userDb.profileFinished(profileId)})
-
-  /*if(!userDb.profileFinished(profileId)) {
-    res.redirect('/finishProfile');
-  }
-  res.redirect('/app');*/
+  userDb.profileFinished(profileId, res);
 
 });
 
@@ -136,6 +125,9 @@ router.get('/getDogIds/:zipCode', loggedIn, call.getDogIds);
 //puts
 router.post('/finishProfile', loggedIn, addUserIdtoReqBody, userDb.addUserEmailandLocation);
 
+// say yes to the dog
+router.post('/yesDog/:dogId', loggedIn, didTriggerRedirect,addUserIdtoReqBody, userDb.yesDog);
+
 app.use('/api', router);
 
 app.listen(port);
@@ -153,4 +145,10 @@ function loggedIn(req, res, next) {
 function addUserIdtoReqBody(req, res, next) {
 	req.body.id = JSON.parse(localStorage.getItem('user')).id;
 	next();
+}
+
+function didTriggerRedirect(req, res, next) {
+  console.log('triggered the thing');
+
+  next();
 }

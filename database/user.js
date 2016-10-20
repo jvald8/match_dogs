@@ -33,7 +33,6 @@ exports.getUser = function(data, db) {
 				});
 
 			}
-
 			return rows
 
 			connection.release();
@@ -79,4 +78,19 @@ exports.profileFinished = function(profileId, res) {
 			connection.release();
 		})
 	})
+}
+
+module.exports.yesDog = function(req, res) {
+	var userId = req.userId,
+		dogId = req.params.dogId;
+
+	//console.log({userId: userId, dogId: dogId});
+
+	res.json({userId: userId})
+}
+
+
+
+module.exports.noDog = function(req, res) {
+	
 }

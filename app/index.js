@@ -39,6 +39,19 @@ var Profile = React.createClass({
 	      }.bind(this)
 	    });
  	},
+ 	handleCheck: function() {
+ 		$.ajax({
+ 			url: `http://localhost:8080/api/yesDog/36532315`,
+ 			dataType: 'json',
+ 			cache: false,
+ 			success: function(data) {
+ 				console.log({message: 'successfully posted human-dog relation'})
+ 			},
+ 			error: function(xhr, status, err) {
+ 				console.error({message: 'did not successfully posted human-dog relation'})
+ 			}
+ 		});
+ 	},
 	getInitialState: function() {
     	return {data: []};
   	},
@@ -64,6 +77,4 @@ var Profile = React.createClass({
  	}
 });
 
-
-
-ReactDOM.render(<Profile url="http://localhost:8080/api/getDog/36239820" pollInterval={2000} />, document.getElementById('app'));
+ReactDOM.render(<Profile url="http://localhost:8080/api/getDog/36532315" pollInterval={2000} />, document.getElementById('app'));

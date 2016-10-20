@@ -13,6 +13,7 @@ var petfinder = require(`petfinder-promise`)(key, secret);
 module.exports.getDog = function(req, res) {
 	var dogId = req.params.dogId;
 	petfinder.pet.get(dogId, {output: 'Full'}).then(function (dog) {
+		console.log(dog)
 		res.json({res: dog})
 	}).catch(function (err) {
 		console.log(`Error: ${err.message}`);
@@ -28,3 +29,10 @@ module.exports.getDogIds = function(req, res) {
 		console.log(`Error: ${err.message}`)
 	})
 }
+
+module.exports.getDogsInAreaNotYetRated = function(req,res) {
+	//var userId, location
+	// 1 get all dogs in a location
+	// take userId, check all dogs already rated
+}
+

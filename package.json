@@ -14,7 +14,8 @@
     "passport-facebook": "^2.1.1",
     "petfinder-promise": "^1.0.0",
     "pug": "^2.0.0-beta6",
-    "superagent": "^2.3.0"
+    "superagent": "^2.3.0",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "babel": "^6.5.2",
