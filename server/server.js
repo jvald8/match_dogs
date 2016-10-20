@@ -6,6 +6,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var path = require('path');
 
 var _ = require('lodash');
 
@@ -74,6 +75,8 @@ app.get('/success', function(req, res, next) {
 
 app.set('views' ,'./views');
 
+app.use(express.static('public/dist'));
+
 app.set('view engine', 'pug');
 
 app.get('/finishProfile', function(req, res, next) {
@@ -93,10 +96,11 @@ app.get('/error', function(req, res, next) {
 app.get('/logout', function(req, res) {
 	localStorage.removeItem('user');
 	res.redirect('/login')
-})
-// testing login function
-app.get('/test', loggedIn, function(req, res) {
-	res.send('this should only send when logged in')
+});
+
+// let's send the app file if loggedin
+app.get('/app', loggedIn, function(req, res) {
+	res.sendFile(path.resolve('public/dist/index.html'));
 });
 
 var router = express.Router();
