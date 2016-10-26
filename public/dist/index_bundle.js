@@ -51,6 +51,33 @@
 /* 1 */
 /***/ function(module, exports) {
 
+	// var Name = React.createClass({
+	// 	getDefaultProps: function() {
+	//   	    return {
+	//   	    	dog: {name: ''}
+	//   	    };
+	//   	},
+	// 	render: function() {
+	// 		return (
+	// 			<h3>{this.props.dog.name}</h3>
+	// 		)
+	// 	}
+	// });
+
+	// var ProfileImage = React.createClass({
+	// 	getDefaultProps: function() {
+	//   	    return {
+	//   	    	dog: {media: {photos: [null, {status:'Loading'}]}}
+	//   	    };
+	//   	},
+	// 	render: function() {
+	// 		console.log(this.props.dog.media.photos[1].pn);
+	// 		return (
+	// 			<img className="prof-image" src={this.props.dog.media.photos[1].pn} />
+	// 		)
+	// 	}
+	// });
+
 	'use strict';
 
 	var Name = React.createClass({
@@ -65,7 +92,7 @@
 			return React.createElement(
 				'h3',
 				null,
-				this.props.dog.name
+				this.props.dogName
 			);
 		}
 	});
@@ -79,15 +106,15 @@
 			};
 		},
 		render: function render() {
-			console.log(this.props.dog.media.photos[1].pn);
-			return React.createElement('img', { className: 'prof-image', src: this.props.dog.media.photos[1].pn });
+			//console.log(this.props.dog.media.photos[1].pn);
+			return React.createElement('img', { className: 'prof-image', src: this.props.dogPhoto });
 		}
 	});
 
 	var Profile = React.createClass({
 		displayName: 'Profile',
 
-		loadDogFromServer: function loadDogFromServer() {
+		loadDogsFromServer: function loadDogsFromServer() {
 			$.ajax({
 				url: this.props.url,
 				dataType: 'json',
@@ -117,26 +144,36 @@
 			return { data: [] };
 		},
 		componentDidMount: function componentDidMount() {
-			this.loadDogFromServer();
-			setInterval(this.loadDogFromServer, this.props.pollInterval);
+			this.loadDogsFromServer();
+			setInterval(this.loadDogsFromServer, this.props.pollInterval);
 		},
 		render: function render() {
+			console.log(this.state.data);
+			var dogs = this.state.data.res || [];
+			var dogList = dogs.map(function (dog) {
+				return React.createElement(
+					'div',
+					{ className: 'main-container' },
+					React.createElement(Name, { dogName: dog.name }),
+					React.createElement(ProfileImage, { dogPhoto: dog.media.photos[1].pn }),
+					React.createElement(
+						'div',
+						{ className: 'check-x-container' },
+						React.createElement('img', { className: 'green-check', src: '../assets/green-check.png' }),
+						React.createElement('img', { className: 'red-x', src: '../assets/red-x.png' })
+					)
+				);
+			});
+
 			return React.createElement(
 				'div',
-				{ className: 'main-container' },
-				React.createElement(Name, { dog: this.state.data.res }),
-				React.createElement(ProfileImage, { dog: this.state.data.res }),
-				React.createElement(
-					'div',
-					{ className: 'check-x-container' },
-					React.createElement('img', { className: 'green-check', src: '../assets/green-check.png' }),
-					React.createElement('img', { className: 'red-x', src: '../assets/red-x.png' })
-				)
+				null,
+				dogList
 			);
 		}
 	});
 
-	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDog/36532315', pollInterval: 2000 }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDogIds/93117', pollInterval: 2000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);

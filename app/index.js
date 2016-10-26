@@ -6,7 +6,7 @@ var Name = React.createClass({
   	},
 	render: function() {
 		return (
-			<h3>{this.props.dog.name}</h3>
+			<h3>{this.props.dogName}</h3>
 		)
 	}
 });
@@ -18,15 +18,15 @@ var ProfileImage = React.createClass({
   	    };
   	},
 	render: function() {
-		console.log(this.props.dog.media.photos[1].pn);
+		//console.log(this.props.dog.media.photos[1].pn);
 		return (
-			<img className="prof-image" src={this.props.dog.media.photos[1].pn} />
+			<img className="prof-image" src={this.props.dogPhoto} />
 		)
 	}
 });
 
 var Profile = React.createClass({
-	loadDogFromServer: function() {
+	loadDogsFromServer: function() {
 	    $.ajax({
 	      url: this.props.url,
 	      dataType: 'json',
@@ -56,25 +56,30 @@ var Profile = React.createClass({
     	return {data: []};
   	},
   	componentDidMount: function() {
-    	this.loadDogFromServer();
-    	setInterval(this.loadDogFromServer, this.props.pollInterval);	
+    	this.loadDogsFromServer();
+    	setInterval(this.loadDogsFromServer, this.props.pollInterval);	
   	},
 	render: function() {
-		return (
-			<div className="main-container">
+		console.log(this.state.data);
+		var dogs = this.state.data.res || [];
+		var dogList = dogs.map(function(dog) {
+			return (
+				<div className="main-container">
 
-			  	<Name dog={this.state.data.res} />
+					<Name dogName={dog.name} />
 
-			  	<ProfileImage dog={this.state.data.res} />
-			  	
-			  	<div className="check-x-container">
-			  		<img className="green-check" src="../assets/green-check.png" />
-			  		<img className="red-x" src="../assets/red-x.png" />
-			  	</div>
+					<ProfileImage dogPhoto={dog.media.photos[1].pn} />
 
-		  	</div>
-		)
+					<div className="check-x-container">
+				  		<img className="green-check" src="../assets/green-check.png" />
+				  		<img className="red-x" src="../assets/red-x.png" />
+				  	</div>
+				</div>
+			)
+		});
+
+		return <div>{dogList}</div>
  	}
 });
 
-ReactDOM.render(<Profile url="http://localhost:8080/api/getDog/36532315" pollInterval={2000} />, document.getElementById('app'));
+ReactDOM.render(<Profile url="http://localhost:8080/api/getDogIds/93117" pollInterval={2000} />, document.getElementById('app'));
