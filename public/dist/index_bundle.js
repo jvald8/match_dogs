@@ -51,34 +51,40 @@
 /* 1 */
 /***/ function(module, exports) {
 
-	// var Name = React.createClass({
-	// 	getDefaultProps: function() {
-	//   	    return {
-	//   	    	dog: {name: ''}
-	//   	    };
-	//   	},
-	// 	render: function() {
-	// 		return (
-	// 			<h3>{this.props.dog.name}</h3>
-	// 		)
-	// 	}
-	// });
-
-	// var ProfileImage = React.createClass({
-	// 	getDefaultProps: function() {
-	//   	    return {
-	//   	    	dog: {media: {photos: [null, {status:'Loading'}]}}
-	//   	    };
-	//   	},
-	// 	render: function() {
-	// 		console.log(this.props.dog.media.photos[1].pn);
-	// 		return (
-	// 			<img className="prof-image" src={this.props.dog.media.photos[1].pn} />
-	// 		)
-	// 	}
-	// });
-
 	'use strict';
+
+	var CheckContainer = React.createClass({
+		displayName: 'CheckContainer',
+
+		getDefaultProps: function getDefaultProps() {
+			return {
+				dog: { Id: '' }
+			};
+		},
+		handleCheck: function handleCheck() {
+			console.log(this.props.dogId);
+			$.ajax({
+				type: "POST",
+				url: 'http://localhost:8080/api/yesDog/' + this.props.dogId,
+				dataType: 'json',
+				cache: false,
+				success: function success(data) {
+					console.log({ message: 'successfully posted human-dog relation' });
+				},
+				error: function error(xhr, status, err) {
+					console.error({ message: 'did not successfully post human-dog relation' });
+				}
+			});
+		},
+		render: function render() {
+			return React.createElement(
+				'div',
+				{ className: 'check-x-container' },
+				React.createElement('img', { className: 'green-check', src: '../assets/green-check.png', onClick: this.handleCheck }),
+				React.createElement('img', { className: 'red-x', src: '../assets/red-x.png' })
+			);
+		}
+	});
 
 	var Name = React.createClass({
 		displayName: 'Name',
@@ -127,19 +133,6 @@
 				}).bind(this)
 			});
 		},
-		handleCheck: function handleCheck() {
-			$.ajax({
-				url: 'http://localhost:8080/api/yesDog/36532315',
-				dataType: 'json',
-				cache: false,
-				success: function success(data) {
-					console.log({ message: 'successfully posted human-dog relation' });
-				},
-				error: function error(xhr, status, err) {
-					console.error({ message: 'did not successfully posted human-dog relation' });
-				}
-			});
-		},
 		getInitialState: function getInitialState() {
 			return { data: [] };
 		},
@@ -156,12 +149,7 @@
 					{ className: 'main-container' },
 					React.createElement(Name, { dogName: dog.name }),
 					React.createElement(ProfileImage, { dogPhoto: dog.media.photos[1].pn }),
-					React.createElement(
-						'div',
-						{ className: 'check-x-container' },
-						React.createElement('img', { className: 'green-check', src: '../assets/green-check.png' }),
-						React.createElement('img', { className: 'red-x', src: '../assets/red-x.png' })
-					)
+					React.createElement(CheckContainer, { dogId: dog.id })
 				);
 			});
 
@@ -173,7 +161,7 @@
 		}
 	});
 
-	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDogIds/93117', pollInterval: 2000 }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDogIds/93117', pollInterval: 200000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);

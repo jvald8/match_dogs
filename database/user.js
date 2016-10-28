@@ -81,12 +81,12 @@ exports.profileFinished = function(profileId, res) {
 }
 
 module.exports.yesDog = function(req, res) {
-	var userId = req.userId,
-		dogId = req.params.dogId;
+	var userId = parseInt(req.body.id),
+		dogId = parseInt(req.params.dogId);
 
-	//console.log({userId: userId, dogId: dogId});
+	console.log({userId: userId, dogId: dogId});
 
-	res.json({userId: userId})
+	return res.json({userId: userId})
 }
 
 

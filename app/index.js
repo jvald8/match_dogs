@@ -1,3 +1,34 @@
+var CheckContainer = React.createClass({
+	getDefaultProps: function() {
+  	    return {
+  	    	dog: {Id: ''} 
+  	    };
+  	},
+ 	handleCheck: function() {
+ 		console.log(this.props.dogId);
+ 		$.ajax({
+ 			type: "POST",
+ 			url: `http://localhost:8080/api/yesDog/${this.props.dogId}`,
+ 			dataType: 'json',
+ 			cache: false,
+ 			success: function(data) {
+ 				console.log({message: 'successfully posted human-dog relation'})
+ 			},
+ 			error: function(xhr, status, err) {
+ 				console.error({message: 'did not successfully post human-dog relation'})
+ 			}
+ 		});
+ 	},
+	render: function() {
+		return (
+			<div className="check-x-container">
+		  		<img className="green-check" src="../assets/green-check.png" onClick={this.handleCheck} />
+		  		<img className="red-x" src="../assets/red-x.png" />
+		  	</div>
+		)
+	}
+});
+
 var Name = React.createClass({
 	getDefaultProps: function() {
   	    return {
@@ -39,19 +70,6 @@ var Profile = React.createClass({
 	      }.bind(this)
 	    });
  	},
- 	handleCheck: function() {
- 		$.ajax({
- 			url: `http://localhost:8080/api/yesDog/36532315`,
- 			dataType: 'json',
- 			cache: false,
- 			success: function(data) {
- 				console.log({message: 'successfully posted human-dog relation'})
- 			},
- 			error: function(xhr, status, err) {
- 				console.error({message: 'did not successfully posted human-dog relation'})
- 			}
- 		});
- 	},
 	getInitialState: function() {
     	return {data: []};
   	},
@@ -64,16 +82,14 @@ var Profile = React.createClass({
 		var dogs = this.state.data.res || [];
 		var dogList = dogs.map(function(dog) {
 			return (
-				<div className="main-container">
+				<div className="main-container" >
 
 					<Name dogName={dog.name} />
 
 					<ProfileImage dogPhoto={dog.media.photos[1].pn} />
 
-					<div className="check-x-container">
-				  		<img className="green-check" src="../assets/green-check.png" />
-				  		<img className="red-x" src="../assets/red-x.png" />
-				  	</div>
+					<CheckContainer dogId={dog.id} />
+
 				</div>
 			)
 		});
@@ -82,4 +98,4 @@ var Profile = React.createClass({
  	}
 });
 
-ReactDOM.render(<Profile url="http://localhost:8080/api/getDogIds/93117" pollInterval={2000} />, document.getElementById('app'));
+ReactDOM.render(<Profile url="http://localhost:8080/api/getDogIds/93117" pollInterval={200000} />, document.getElementById('app'));
