@@ -43,7 +43,13 @@ passport.use(new FacebookStrategy({
     //Assuming user exists
     localStorage.setItem('user', JSON.stringify(profile));
 
-    userDb.getUser(profile, done(null, profile));
+    userDb.getUser(profile, function(req, res) {
+      
+      done(null, profile)
+
+    });
+
+    
   });
 }));
 
@@ -101,8 +107,18 @@ app.get('/logout', function(req, res) {
 });
 
 // let's send the app file if loggedin
-app.get('/app', loggedIn, function(req, res) {
-	res.sendFile(path.resolve('public/dist/index.html'));
+app.get('/app', loggedIn, function(req, res, next) {
+  var id = JSON.parse(localStorage.getItem('user')).id;
+
+  userDb.getUserObject(id, function(err, user) {
+    if(err) {
+      throw err
+    }
+
+    console.log({user:user})
+    res.sendFile(path.resolve('public/dist/index.html'));
+  })
+
 });
 
 var router = express.Router();
@@ -121,6 +137,7 @@ app.use(function(req, res, next) {
 // api calls -- Gets
 router.get('/getDog/:dogId', loggedIn, call.getDog);
 router.get('/getDogIds/:zipCode', loggedIn, call.getDogIds);
+router.get('/getDogs', loggedIn, addUsertoReqBody, call.getDogs)
 
 //puts
 router.post('/finishProfile', loggedIn, addUserIdtoReqBody, userDb.addUserEmailandLocation);
@@ -145,6 +162,22 @@ function loggedIn(req, res, next) {
 function addUserIdtoReqBody(req, res, next) {
 	req.body.id = JSON.parse(localStorage.getItem('user')).id;
 	next();
+}
+
+function addUsertoReqBody(req, res, next) {
+
+  var id = JSON.parse(localStorage.getItem('user')).id;
+
+  userDb.getUserObject(id, function(err, user) {
+    if(err) {
+      throw err
+    }
+    console.log({user: user})
+
+    req.body.user = user;
+
+    next();
+  })
 }
 
 function didTriggerRedirect(req, res, next) {

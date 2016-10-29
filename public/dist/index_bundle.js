@@ -63,6 +63,7 @@
 		},
 		handleCheck: function handleCheck() {
 			console.log(this.props.dogId);
+
 			$.ajax({
 				type: "POST",
 				url: 'http://localhost:8080/api/yesDog/' + this.props.dogId,
@@ -161,7 +162,7 @@
 		}
 	});
 
-	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDogIds/93117', pollInterval: 200000 }), document.getElementById('app'));
+	ReactDOM.render(React.createElement(Profile, { url: 'http://localhost:8080/api/getDogs', pollInterval: 200000 }), document.getElementById('app'));
 
 /***/ }
 /******/ ]);

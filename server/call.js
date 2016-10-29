@@ -30,6 +30,17 @@ module.exports.getDogIds = function(req, res) {
 	})
 }
 
+module.exports.getDogs = function(req, res) {
+	//console.log(req.body)
+	var zipCode = req.body.user[0].location;
+	petfinder.pet.find(zipCode, {output: 'basic', count: 30}).then(function(dogIds) {
+		console.log(dogIds.map(function(x) {return parseInt(x.id)}));
+		res.json({res: dogIds})
+	}).catch(function (err) {
+		console.log(`Error: ${err.message}`)
+	})
+}
+
 module.exports.getDogsInAreaNotYetRated = function(req,res) {
 	//var userId, location
 	// 1 get all dogs in a location

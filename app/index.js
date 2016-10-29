@@ -6,6 +6,7 @@ var CheckContainer = React.createClass({
   	},
  	handleCheck: function() {
  		console.log(this.props.dogId);
+
  		$.ajax({
  			type: "POST",
  			url: `http://localhost:8080/api/yesDog/${this.props.dogId}`,
@@ -18,6 +19,7 @@ var CheckContainer = React.createClass({
  				console.error({message: 'did not successfully post human-dog relation'})
  			}
  		});
+
  	},
 	render: function() {
 		return (
@@ -98,4 +100,5 @@ var Profile = React.createClass({
  	}
 });
 
-ReactDOM.render(<Profile url="http://localhost:8080/api/getDogIds/93117" pollInterval={200000} />, document.getElementById('app'));
+ReactDOM.render(<Profile url="http://localhost:8080/api/getDogs" pollInterval={200000} />, document.getElementById('app'));
+

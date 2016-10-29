@@ -12,31 +12,51 @@ var pool = mysql.createPool({
 	port: process.env.MYSQL_PORT
 });
 
-exports.getUser = function(data, db) {
-	console.log({db: db})
+exports.getUser = function(data, cb) {
+
 	pool.getConnection(function(err, connection) {
 		connection.query(`SELECT * FROM humans WHERE fb_id=${data.id}`, function(err, rows, fields) {
 			if(err) throw err;
-			console.log({user_exists: rows});
+			//console.log({user_exists: rows});
 			// if it doesn't exist, create a new user.
 			if(rows.length === 0) {
 
 				connection.query(`INSERT INTO humans VALUES (null, ${data.id}, null, '${data.name.familyName}', '${data.name.givenName}', '${data.gender}', '${data.profileUrl}', '${data._json.verified}', '${data.photos[0].value}', ${data._json.friends.summary.total_count}, null)`, function(err, rows, fields) {
+					
 					if(err) throw err;
 
 					console.log({post_message: `created user: ${data.name.givenName} ${data.name.familyName} in humans table`})
 
-					return rows;
-
 					connection.release();
+
+					cb(rows);
 					
 				});
 
-			}
-			return rows
+			} else {
 
-			connection.release();
+				connection.release();
+
+				cb(rows);
+			}
+			
 		});
+	});
+}
+
+exports.getUserObject = function(id, db) {
+
+	pool.getConnection(function(err, connection) {
+
+		connection.query(`SELECT * FROM humans WHERE fb_id=${id}`, function(err, rows, fields) {
+			if(err) throw err;
+
+			if(rows.length !== 0) {
+
+				connection.release();
+				db(err, rows)
+			}
+		})
 	});
 }
 
@@ -52,7 +72,7 @@ exports.addUserEmailandLocation = function(data, db) {
 			console.log(rows)
 
 			connection.release();
-		})
+		});
 
 	});
 
